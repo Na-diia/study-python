@@ -1,35 +1,44 @@
-# Завдання 1: Основи HTTP
-
-# Поясніть, що таке протокол HTTP і для чого він використовується в веб-розробці. Розкажіть про основні методи HTTP, такі як GET, POST, PUT і DELETE.
-
-# Завдання 2: Клієнт та Сервер
-
-# 2.1. Опишіть різницю між клієнтом і сервером у контексті веб-розробки.
-
-# 2.2. Поясніть, як клієнт та сервер взаємодіють за допомогою HTTP-запитів та відповідей.
-
-# Блок бібліотеки requests:
-
+import requests
 # Завдання 1: Виконання GET-запиту
 
-# Створіть Python-сценарій, який використовує бібліотеку requests для виконання GET-запиту до веб-ресурсу та виведення вмісту веб-сторінки на екран. Використовуйте функцію requests.get() для виконання запиту.
-
+site = "https://jsonplaceholder.typicode.com/comments?"
+response_get = requests.get(url=site)
+# print(response_get.json())
 # Завдання 2: Параметри запиту
 
-# Розширте попереднє завдання, додаючи можливість вказати параметри запиту. Виконайте GET-запит до веб-ресурсу, передаючи параметри запиту, такі як параметри запиту у URL або параметри через словник.
-
+response_get_2 = requests.get(url=site, params={"postId": 1})
+print(response_get_2.json())
 # Завдання 3: POST-запит
-
-# Створіть Python-сценарій для виконання POST-запиту до веб-ресурсу. Відправте дані на сервер, наприклад, форму з ім'ям користувача і паролем.
+body = {
+    "name": "Nadiia",
+    "email": "nadiia@gmail.com",
+    "body": "Hello, buddy"
+}
+req_post = requests.post(url=site, json=body)
+print(req_post.status_code)
+print(req_post.reason)
+print(req_post.text)
 
 # Завдання 4: Обробка відповіді
 
-# Після виконання запиту, розпарсьте вміст HTTP-відповіді та виведіть потрібну інформацію. Наприклад, виведіть заголовки відповіді або вміст сторінки.
+for header, value in response_get.headers.items():
+    print(f"Headers: {header}, ==> Value: {value}")
 
 # Завдання 5: Обробка помилок
 
-# Додайте обробку помилок до вашого коду. Обробляйте можливі винятки, такі як requests.exceptions.RequestException, та виводьте відповідні повідомлення про помилку.
+url = "https://jsonplaceholder.typicode.com/comments"
+
+try:
+    result = requests.get(url)
+    result.raise_for_status()
+except requests.exceptions.RequestException as err:
+    print("HTTP Error")
+    print(err.args[0])
+
+print(result)
 
 # Завдання 6: Збереження вмісту в файл
 
-# Розширте ваш код, щоб зберегти отриманий вміст веб-сторінки у файл. Використайте функціонал Python для роботи з файлами для збереження вмісту.
+response= requests.get(url)
+file_object = open("my_file.txt", "r+")
+file_object.write(str(response.content))
